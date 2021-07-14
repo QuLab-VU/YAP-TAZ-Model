@@ -42,394 +42,382 @@ Monomer('NPC', ['state'], {'state': ['A', 'i']})
 
 # Other Constants
     #V is in Liters and we Choose what E is
-V = (4/3*(3.14159265)*(50e-6)**3)*1000
+V = 2300e-15 # Cytoplasm
+V_2 = 550e-15 # Nucleus
 Avog_num = 6.022e23
 # Units are in um^2
-cell_SA = 4*(3.14159265)*(50)**2
-
-pFAK = []
-FAK = []
-RhoAGTP = []
-MyoA = []
-Myo = []
-LaminA = []
-LaminAp = []
-YAPTAZnuc = []
-YAPTAZcyto = []
-
-stiffness = np.arange(0,8.0, 0.1)
-for expo in stiffness
-
-    E = 10^expo
-    # FAK Reaction
-
-    # Original Units for all (1/s)
-    Parameter('kf', 0.015)
-    Parameter('kdf', 0.035)
-    Parameter('ksf', 0.379*(E/(E+3.250)))
-    # RhoA Reaction
-
-    # Original Units: (1/s)
-    Parameter('kfkp', 0.0168)
-    #Original Units: 1/(uM^5)
-    Parameter('gamma', 77.56*1e30/((Avog_num*V)**5))
-    #Original Units: unitless
-    Parameter('n', 5)
-    # Used for 1st order Reverse reaction
-    # Original Units: (1/s)
-    Parameter('kde', 0.625)
-
-    # ROCK Reaction
-
-    # Will be used for 2nd order reaction
-    # Original units: 1/(s*uM)
-    Parameter('krp', 0.648*1e6/(V*Avog_num))
-    # Will be used for 1st order reaction
-    # Original Units: (1/s)
-    Parameter('kd', 0.8)
-
-    # mDia Reaction
-
-    # Used for 2nd order reactions
-    # Original Units: 1/(s*uM)
-    Parameter('kmp', 0.002*1e6/(V*Avog_num))
-    # Used for 1st order reactions
-    # Original Units: 1/s
-    Parameter('kdmDia', 0.005)
-
-    # Myo Reaction
-
-    # Both are 1st order
-    # Original Units: 1/s
-    Parameter('kmr', 0.03)
-    # Original Units: 1/uM
-    Parameter('e', 36*1e6/(Avog_num*V))
-    # Original Units: 1/s
-    Parameter('kdmy', 0.067)
-
-    # LIMK Reaction
-
-    # Both are 1st order
-    # Original Units: 1/s
-    Parameter('klr', 0.07)
-    # Original Units: 1/uM
-    Parameter('tau', 55.49*1e6/(Avog_num*V))
-    # Original Units: 1/s
-    Parameter('kdl', 2)
-
-    # Cofilin Reaction
-
-    # Used for 1st order reaction
-    # Original Units: 1/s
-    Parameter('kturnover', 0.04)
-    # Used for 1st order reaction
-    # Original Units: 1/s
-    Parameter('kcatcofilin', 0.34)
-    Parameter('kmcofilin', 4*1e-6*V*Avog_num)
-
-    # G-actin to Factin Reaction
-
-    # Used for 1st order reaction
-    # Original Units: 1/s
-    Parameter('kra', 0.4)
-    # Original Units: 1/uM
-    Parameter('alpha', 50*1e6/(Avog_num*V))
-    # Used for 1st order reaction
-    # Original Units: 1/s
-    Parameter('kdep', 3.5)
-    # Used for 2nd order reaction
-    # Original Units: 1/(s*uM)
-    Parameter('kfc1', 4*1e6/(V*Avog_num))
-
-    # For the tanh Functions:
-    # Original Units: 1/(uM)
-    Parameter('sc1', 20*1e6/(V*Avog_num))
-    # Original Units: uM
-    Parameter('ROCKB', 0.3*1e-6*V*Avog_num)
-    Parameter('mDiaB', 0.165*1e-6*V*Avog_num)
-
-    # YAPTAZ Reactions
-
-    # Used for 1st order reactions
-    # Original Units: 1/s
-    Parameter('knc', 0.14)
-    Parameter('kcn', 0.56)
-    # Used for 1st order reactions (although these are kinda weird)
-    # Original Units: #/(s*uM*um^2)
-    Parameter('kinb', 1*1e6*cell_SA/(Avog_num*V)) # <---- Derived using some calculations
-    Parameter('kout', 1*1e6*cell_SA/(Avog_num*V))
-    # Used for 3rd order reactions
-    # Original Units 1/((uM*)2)*s)
-    Parameter('kcy', 7.6e-4*1e12/((V*Avog_num)**2))
-    # Used for 2nd order Reaction
-    # Original Units: 1/(uM*s)
-    Parameter('kin', 10*1e6/(V*Avog_num))
+cell_SA = 1260 # Plasma Membrane
+cell_SA_2 = 390 # Nuclear Membrane
+
+ss_vals = []
+
+# FAK Reaction
+
+# Original Units for all (1/s)
+Parameter('kf', 0.015)
+Parameter('kdf', 0.035)
+Parameter('ksf')
+# RhoA Reaction
+
+# Original Units: (1/s)
+Parameter('kfkp', 0.0168)
+# Original Units: 1/(uM^5)
+Parameter('gamma', 77.56 * 1e30 / ((Avog_num * V) ** 5))
+# Original Units: unitless
+Parameter('n', 5)
+# Used for 1st order Reverse reaction
+# Original Units: (1/s)
+Parameter('kde', 0.625)
+
+# ROCK Reaction
+
+# Will be used for 2nd order reaction
+# Original units: 1/(s*uM)
+Parameter('krp', 0.648 * 1e6 / (V * Avog_num))
+# Will be used for 1st order reaction
+# Original Units: (1/s)
+Parameter('kd', 0.8)
+
+# mDia Reaction
+
+# Used for 2nd order reactions
+# Original Units: 1/(s*uM)
+Parameter('kmp', 0.002 * 1e6 / (V * Avog_num))
+# Used for 1st order reactions
+# Original Units: 1/s
+Parameter('kdmDia', 0.005)
+
+# Myo Reaction
+
+# Both are 1st order
+# Original Units: 1/s
+Parameter('kmr', 0.03)
+# Original Units: 1/uM
+Parameter('e', 36 * 1e6 / (Avog_num * V))
+# Original Units: 1/s
+Parameter('kdmy', 0.067)
+
+# LIMK Reaction
+
+# Both are 1st order
+# Original Units: 1/s
+Parameter('klr', 0.07)
+# Original Units: 1/uM
+Parameter('tau', 55.49 * 1e6 / (Avog_num * V))
+# Original Units: 1/s
+Parameter('kdl', 2)
+
+# Cofilin Reaction
+
+# Used for 1st order reaction
+# Original Units: 1/s
+Parameter('kturnover', 0.04)
+# Used for 1st order reaction
+# Original Units: 1/s
+Parameter('kcatcofilin', 0.34)
+Parameter('kmcofilin', 4 * 1e-6 * V * Avog_num)
+
+# G-actin to Factin Reaction
+
+# Used for 1st order reaction
+# Original Units: 1/s
+Parameter('kra', 0.4)
+# Original Units: 1/uM
+Parameter('alpha', 50 * 1e6 / (Avog_num * V))
+# Used for 1st order reaction
+# Original Units: 1/s
+Parameter('kdep', 3.5)
+# Used for 2nd order reaction
+# Original Units: 1/(s*uM)
+Parameter('kfc1', 4 * 1e6 / (V * Avog_num))
+
+# For the tanh Functions:
+# Original Units: 1/(uM)
+Parameter('sc1', 20 * 1e6 / (V * Avog_num))
+# Original Units: uM
+Parameter('ROCKB', 0.3 * 1e-6 * V * Avog_num)
+Parameter('mDiaB', 0.165 * 1e-6 * V * Avog_num)
+
+# YAPTAZ Reactions
+
+# Used for 1st order reactions
+# Original Units: 1/s
+Parameter('knc', 0.14)
+Parameter('kcn', 0.56)
+# Used for 1st order reactions (although these are kinda weird)
+# Original Units: #/(s*uM*um^2)
+Parameter('kinb', 1 * 1e6 * cell_SA / (Avog_num * V))  # <---- Derived using some calculations
+Parameter('kout', 1 * 1e6 * cell_SA / (Avog_num * V))
+# Used for 3rd order reactions
+# Original Units 1/((uM*)2)*s)
+Parameter('kcy', 7.6e-4 * 1e12 / ((V * Avog_num) ** 2))
+# Used for 2nd order Reaction
+# Original Units: 1/(uM*s)
+Parameter('kin', 10 * 1e6 / (V * Avog_num))
+
+# LaminA Reactins
+
+# Used for 1st order reactions
+# Original Units: 1/s
+Parameter('krl', 0.001)
+Parameter('kfl', 0.46)
+# Original Units: kPa/(uM^2.6)
+Parameter('p', 9e-6)
+
+# NPC Reactions
+
+# Used for 1st order reactions
+# Original Units: 1/s
+Parameter('kr', 8.7)
+# Used for a 4th order reaction
+# Original Units: um^2/(#*uM^2*s)
+Parameter('kfnpc', 2.8e-7 * 1e12 / (cell_SA * (V * Avog_num) ** 2))
+
+# In[4]:
 
-    # LaminA Reactins
 
-    # Used for 1st order reactions
-    # Original Units: 1/s
-    Parameter('krl', 0.001)
-    Parameter('kfl', 0.46)
-    # Original Units: kPa/(uM^2.6)
-    Parameter('p', 9e-6)
+# Setting the Initial Values
 
-    # NPC Reactions
+Parameter('FAKp_0', 0.3 * 1e-6 * V * Avog_num)
+Initial(FAK(state='p'), FAKp_0)
+Parameter('FAKu_0', 0.7 * 1e-6 * V * Avog_num)
+Initial(FAK(state='u'), FAKu_0)
 
-    # Used for 1st order reactions
-    # Original Units: 1/s
-    Parameter('kr', 8.7)
-    # Used for a 4th order reaction
-    #Original Units: um^2/(#*uM^2*s)
-    Parameter('kfnpc', 2.8e-7*1e12/(cell_SA*(V*Avog_num)**2))
+Parameter('RhoAgtp_0', 33.6 * cell_SA)
+Initial(RhoA(state='gtp'), RhoAgtp_0)
+Parameter('RhoAgdp_0', 1 * 1e-6 * V * Avog_num)
+Initial(RhoA(state='gdp'), RhoAgdp_0)
 
+Parameter('ROCKa_0', 0)
+Initial(ROCK(state='a'), ROCKa_0)
+Parameter('ROCKi_0', 1 * 1e-6 * V * Avog_num)
+Initial(ROCK(state='i'), ROCKi_0)
 
+Parameter('mDiaA_0', 0)
+Initial(mDia(state='A'), mDiaA_0)
+Parameter('mDiai_0', 0.8 * 1e-6 * V * Avog_num)
+Initial(mDia(state='i'), mDiai_0)
 
+Parameter('MyoA_0', 1.5 * 1e-6 * V * Avog_num)
+Initial(Myo(state='A'), MyoA_0)
+Parameter('Myoi_0', 3.5 * 1e-6 * V * Avog_num)
+Initial(Myo(state='i'), Myoi_0)
 
-    # In[4]:
-
-
-    # Setting the Initial Values
-
-    Parameter('FAKp_0', 0.3*1e-6*V*Avog_num)
-    Initial(FAK(state = 'p'), FAKp_0)
-    Parameter('FAKu_0', 0.7*1e-6*V*Avog_num)
-    Initial(FAK(state = 'u'), FAKu_0)
-
-    Parameter('RhoAgtp_0', 33.6*cell_SA)
-    Initial(RhoA(state = 'gtp'), RhoAgtp_0)
-    Parameter('RhoAgdp_0', 1*1e-6*V*Avog_num)
-    Initial(RhoA(state = 'gdp'), RhoAgdp_0 )
-
-    Parameter('ROCKa_0',0)
-    Initial(ROCK(state = 'a'), ROCKa_0)
-    Parameter('ROCKi_0', 1*1e-6*V*Avog_num)
-    Initial(ROCK(state = 'i'), ROCKi_0)
-
-    Parameter('mDiaA_0', 0)
-    Initial(mDia(state = 'A'), mDiaA_0)
-    Parameter('mDiai_0', 0.8*1e-6*V*Avog_num)
-    Initial(mDia(state = 'i'), mDiai_0)
-
-    Parameter('MyoA_0', 1.5*1e-6*V*Avog_num)
-    Initial(Myo(state = 'A'), MyoA_0)
-    Parameter('Myoi_0', 3.5*1e-6*V*Avog_num)
-    Initial(Myo(state = 'i'), Myoi_0)
-
-    Parameter('LIMKA_0', 0.1*1e-6*V*Avog_num)
-    Initial(LIMK(state = 'A'), LIMKA_0)
-    Parameter('LIMKi_0', 1.9*1e-6*V*Avog_num)
-    Initial(LIMK(state = 'i'), LIMKi_0)
-
-    Parameter('CofilinNP_0', 1.8*1e-6*V*Avog_num)
-    Initial(Cofilin(state = 'np'), CofilinNP_0 )
-    Parameter('CofilinP_0', 0.2*1e-6*V*Avog_num)
-    Initial(Cofilin(state = 'p'), CofilinP_0 )
-
-    Parameter('Factin_0', 17.9*1e-6*V*Avog_num)
-    Initial(G_actin(state = 'Factin'), Factin_0)
-    Parameter('G_actin_0', 482.4*1e-6*V*Avog_num)
-    Initial(G_actin(state = 'i'), G_actin_0)
-
-    Parameter('YAPTAZi_0', 0.7*1e-6*V*Avog_num)
-    Initial(YAPTAZ(state = 'i'), YAPTAZi_0)
-    Parameter('YAPTAZnuc_0', 0.7*1e-6*V*Avog_num)
-    Initial(YAPTAZ(state = 'nuc'), YAPTAZnuc_0)
-    Parameter('YAPTAZp_0', 0.2*1e-6*V*Avog_num)
-    Initial(YAPTAZ(state = 'p'), YAPTAZp_0)
-
-    Parameter('LaminAp_0', 3500*cell_SA)
-    Initial(LaminA(state = 'p'), LaminAp_0)
-    Parameter('LaminAi_0', 0)
-    Initial(LaminA(state = 'i'), LaminAi_0)
-
-    Parameter('NPCA_0', 0)
-    Initial(NPC(state = 'A'), NPCA_0)
-    Parameter('NPCi_0', 6.5*cell_SA)
-    Initial(NPC(state = 'i'), NPCi_0)
-
-
-    # In[5]:
-
-
-    # Observables
-    Observable('obsFAKp', FAK(state = 'p'))
-    Observable('obsFAKu', FAK(state = 'u'))
-
-    Observable('obsRhoAgtp', RhoA(state = 'gtp'))
-    Observable('obsRhoAgdp', RhoA(state = 'gdp'))
-
-    Observable('obsROCKa', ROCK(state = 'a'))
-    Observable('obsROCKi', ROCK(state = 'i'))
-
-    Observable('obsmDiaA', mDia(state = 'A'))
-    Observable('obsmDiai', mDia(state = 'i'))
-
-    Observable('obsMyoA', Myo(state = 'A'))
-    Observable('obsMyoi', Myo(state = 'i'))
-
-    Observable('obsLIMKA',LIMK(state = 'A'))
-    Observable('obsLIMKi',LIMK(state = 'i'))
-
-    Observable('obsCofilinNP', Cofilin(state = 'np'))
-    Observable('obsCofilinP', Cofilin(state = 'p'))
-
-    Observable('obsFactin', G_actin(state = 'Factin'))
-    Observable('obsG_actin', G_actin(state = 'i'))
-
-    Observable('obsYAPTAZnuc', YAPTAZ(state = 'nuc'))
-    Observable('obsYAPTAZp', YAPTAZ(state = 'p'))
-    Observable('obsYAPTAZi', YAPTAZ(state = 'i'))
-
-    Observable('obsLaminAp', LaminA(state = 'p'))
-    Observable('obsLaminAi', LaminA(state = 'i'))
-
-    Observable('obsNPCA', NPC(state = 'A'))
-    Observable('obsNPCi', NPC(state = 'i'))
-
-
-    # In[6]:
-
-
-    # Rules
-
-    # FAK
-    # Regular Forward and Backward FAK Reaction
-    Rule('activ_FAK', FAK(state = 'u') | FAK(state = 'p'), kf, kdf)
-    # Forward FAK Reaction activated by stiffness
-    Rule('activ_FAK_stiff', FAK(state = 'u') >> FAK(state = 'p'), ksf)
-
-    # RhoA
-    Expression('RhoAgdp_to_RhoAgtp', kfkp*(gamma*obsFAKp**5+1))
-    Rule('activ_RhoA', RhoA(state = 'gdp') | RhoA(state = 'gtp'), RhoAgdp_to_RhoAgtp, kde)
-
-    # ROCK
-    # 2nd Order Forward Reaction
-    Rule('activ_ROCK', ROCK(state = 'i') + RhoA(state = 'gtp') >> ROCK(state = 'a') + RhoA(state = 'gtp'), krp)
-    # 1st Order Reverse Reaction
-    Rule('deactiv_ROCK', ROCK(state = 'a') >> ROCK(state = 'i'), kd)
-
-    # mDia
-    # 2nd Order Forward Reaction
-    Rule('activ_mDia', RhoA(state = 'gtp') + mDia(state = 'i') >> RhoA(state = 'gtp') + mDia(state = 'A'), kmp)
-    # 1st Order Reverse Reaction
-    Rule('deactiv_mDia', mDia(state = 'A') >> mDia(state = 'i'), kdmDia)
-
-    # Myo
-    Expression('Myo_to_MyoA', kmr*(e*((sympy.tanh(sc1*(obsROCKa - ROCKB)) + 1)*obsROCKa*0.5) +1 ))
-    Rule('activ_Myo', Myo(state = 'i') | Myo(state = 'A'), Myo_to_MyoA, kdmy)
-
-    # LIMK
-    Expression('LIMK_to_LIMKA', klr*(tau*((sympy.tanh(sc1*(obsROCKa - ROCKB)) + 1)*obsROCKa*0.5) +1 ))
-    Rule('activ_LIMKA', LIMK(state = 'i') | LIMK(state = 'A'), LIMK_to_LIMKA, kdl)
-
-    # Cofilin
-    Rule('activ_cofilin', Cofilin(state = 'p') >> Cofilin(state = 'np'), kturnover)
-    Expression('cofilinNP_to_cofilinP', kcatcofilin/(kmcofilin + obsCofilinNP))
-    Rule('deactiv_cofilin', Cofilin(state = 'np') + LIMK(state = 'A') >> Cofilin(state = 'p') + LIMK(state = 'A'), cofilinNP_to_cofilinP)
-
-    # G_Actin to Factin
-    Expression('G_actin_to_Factin', kra*(alpha*((sympy.tanh(sc1*(obsmDiaA - mDiaB)) + 1)*obsmDiaA*0.5) +1 ))
-    Rule('activ_G_actin', G_actin(state = 'i') | G_actin(state = 'Factin'), G_actin_to_Factin, kdep)
-    Rule('deactiv_G_actin_Cofilin', G_actin(state = 'Factin') + Cofilin(state = 'np') >> G_actin(state = 'i') + Cofilin(state = 'np'), kfc1)
-
-    # YAPTAZ
-    # Basal YAPTAZ to YAPTAZp
-    Rule('YAPTAZ_to_YAPTAZp_basal', YAPTAZ(state = 'i') | YAPTAZ(state = 'p'), knc, kcn)
-    # YAPTAZp to YAPTAZ Catalyzed by Factin and MyoA
-    Rule('YAPTAZp_to_YAPTAZ', G_actin(state = 'Factin') + Myo(state = 'A') + YAPTAZ(state = 'p') >> G_actin(state = 'Factin') + Myo(state = 'A') + YAPTAZ(state = 'i'), kcy)
-    # YAPTAZnuc to YAPTAZ Basal
-    Rule('YAPTAZnuc_to_YAPTAZ', YAPTAZ(state = 'i') | YAPTAZ(state = 'nuc'), kinb, kout)
-    # YAPTAZ to YAPTAZnuc with NPCA opening
-    Rule('YAPTAZ_to_YAPTAZnuc', NPC(state = 'A') + YAPTAZ(state = 'i') >> NPC(state = 'A') + YAPTAZ(state = 'nuc'), kin )
-
-    # LaminA
-    Expression('Stiffness_LaminA', (p*(obsFactin*1e6/(V*Avog_num))**2.6)/(100 +(p*(obsFactin*1e6/(V*Avog_num))**2.6)))
-    Expression('LaminA_Deactiv', Stiffness_LaminA*kfl)
-    Rule('LaminA_to_LaminAp', LaminA(state = 'i') | LaminA(state = 'p'), krl, LaminA_Deactiv)
-
-    # NPC
-    # NPC Closing
-    Rule('NPC_close', NPC(state = 'A') >> NPC(state = 'i'), kr)
-    # NPC Opening
-    Rule('NPC_open', NPC(state = 'i') + LaminA(state = 'i') + G_actin(state = 'Factin') + Myo(state = 'A') >> NPC(state = 'A') + LaminA(state = 'i') + G_actin(state = 'Factin') + Myo(state = 'A'), kfnpc)
-
-
-    # In[7]:
-
-
-    # for i,s in enumerate(model.species):
-    #    print(i,s)
-    #print()
-    #for a,r in enumerate(model.reactions):
-       # print(a,r['rate'])
-    #print()
-    # for i, ode in enumerate(model.odes):
-    #     print(i,'ds%d/dt = '%i,ode)
+Parameter('LIMKA_0', 0.1 * 1e-6 * V * Avog_num)
+Initial(LIMK(state='A'), LIMKA_0)
+Parameter('LIMKi_0', 1.9 * 1e-6 * V * Avog_num)
+Initial(LIMK(state='i'), LIMKi_0)
+
+Parameter('CofilinNP_0', 1.8 * 1e-6 * V * Avog_num)
+Initial(Cofilin(state='np'), CofilinNP_0)
+Parameter('CofilinP_0', 0.2 * 1e-6 * V * Avog_num)
+Initial(Cofilin(state='p'), CofilinP_0)
+
+Parameter('Factin_0', 17.9 * 1e-6 * V * Avog_num)
+Initial(G_actin(state='Factin'), Factin_0)
+Parameter('G_actin_0', 482.4 * 1e-6 * V * Avog_num)
+Initial(G_actin(state='i'), G_actin_0)
+
+Parameter('YAPTAZi_0', 0.7 * 1e-6 * V * Avog_num)
+Initial(YAPTAZ(state='i'), YAPTAZi_0)
+Parameter('YAPTAZnuc_0', 0.7 * 1e-6 * V_2 * Avog_num)
+Initial(YAPTAZ(state='nuc'), YAPTAZnuc_0)
+Parameter('YAPTAZp_0', 0.2 * 1e-6 * V * Avog_num)
+Initial(YAPTAZ(state='p'), YAPTAZp_0)
+
+Parameter('LaminAp_0', 3500 * cell_SA_2)
+Initial(LaminA(state='p'), LaminAp_0)
+Parameter('LaminAi_0', 0)
+Initial(LaminA(state='i'), LaminAi_0)
+
+Parameter('NPCA_0', 0)
+Initial(NPC(state='A'), NPCA_0)
+Parameter('NPCi_0', 6.5 * cell_SA_2)
+Initial(NPC(state='i'), NPCi_0)
+
+# In[5]:
+
+
+# Observables
+Observable('obsFAKp', FAK(state='p'))
+Observable('obsFAKu', FAK(state='u'))
+
+Observable('obsRhoAgtp', RhoA(state='gtp'))
+Observable('obsRhoAgdp', RhoA(state='gdp'))
+
+Observable('obsROCKa', ROCK(state='a'))
+Observable('obsROCKi', ROCK(state='i'))
+
+Observable('obsmDiaA', mDia(state='A'))
+Observable('obsmDiai', mDia(state='i'))
+
+Observable('obsMyoA', Myo(state='A'))
+Observable('obsMyoi', Myo(state='i'))
+
+Observable('obsLIMKA', LIMK(state='A'))
+Observable('obsLIMKi', LIMK(state='i'))
+
+Observable('obsCofilinNP', Cofilin(state='np'))
+Observable('obsCofilinP', Cofilin(state='p'))
+
+Observable('obsFactin', G_actin(state='Factin'))
+Observable('obsG_actin', G_actin(state='i'))
+
+Observable('obsYAPTAZnuc', YAPTAZ(state='nuc'))
+Observable('obsYAPTAZp', YAPTAZ(state='p'))
+Observable('obsYAPTAZi', YAPTAZ(state='i'))
+
+Observable('obsLaminAp', LaminA(state='p'))
+Observable('obsLaminAi', LaminA(state='i'))
+
+Observable('obsNPCA', NPC(state='A'))
+Observable('obsNPCi', NPC(state='i'))
+
+# In[6]:
+
+
+# Rules
+
+# FAK
+# Regular Forward and Backward FAK Reaction
+Rule('activ_FAK', FAK(state='u') | FAK(state='p'), kf, kdf)
+# Forward FAK Reaction activated by stiffness
+Rule('activ_FAK_stiff', FAK(state='u') >> FAK(state='p'), ksf)
+
+# RhoA
+Expression('RhoAgdp_to_RhoAgtp', kfkp * (gamma * obsFAKp ** 5 + 1))
+Rule('activ_RhoA', RhoA(state='gdp') | RhoA(state='gtp'), RhoAgdp_to_RhoAgtp, kde)
+
+# ROCK
+# 2nd Order Forward Reaction
+Rule('activ_ROCK', ROCK(state='i') + RhoA(state='gtp') >> ROCK(state='a') + RhoA(state='gtp'), krp)
+# 1st Order Reverse Reaction
+Rule('deactiv_ROCK', ROCK(state='a') >> ROCK(state='i'), kd)
+
+# mDia
+# 2nd Order Forward Reaction
+Rule('activ_mDia', RhoA(state='gtp') + mDia(state='i') >> RhoA(state='gtp') + mDia(state='A'), kmp)
+# 1st Order Reverse Reaction
+Rule('deactiv_mDia', mDia(state='A') >> mDia(state='i'), kdmDia)
+
+# Myo
+Expression('Myo_to_MyoA', kmr * (e * ((sympy.tanh(sc1 * (obsROCKa - ROCKB)) + 1) * obsROCKa * 0.5) + 1))
+Rule('activ_Myo', Myo(state='i') | Myo(state='A'), Myo_to_MyoA, kdmy)
+
+# LIMK
+Expression('LIMK_to_LIMKA', klr * (tau * ((sympy.tanh(sc1 * (obsROCKa - ROCKB)) + 1) * obsROCKa * 0.5) + 1))
+Rule('activ_LIMKA', LIMK(state='i') | LIMK(state='A'), LIMK_to_LIMKA, kdl)
+
+# Cofilin
+Rule('activ_cofilin', Cofilin(state='p') >> Cofilin(state='np'), kturnover)
+Expression('cofilinNP_to_cofilinP', kcatcofilin / (kmcofilin + obsCofilinNP))
+Rule('deactiv_cofilin', Cofilin(state='np') + LIMK(state='A') >> Cofilin(state='p') + LIMK(state='A'),
+     cofilinNP_to_cofilinP)
+
+# G_Actin to Factin
+Expression('G_actin_to_Factin', kra * (alpha * ((sympy.tanh(sc1 * (obsmDiaA - mDiaB)) + 1) * obsmDiaA * 0.5) + 1))
+Rule('activ_G_actin', G_actin(state='i') | G_actin(state='Factin'), G_actin_to_Factin, kdep)
+Rule('deactiv_G_actin_Cofilin',
+     G_actin(state='Factin') + Cofilin(state='np') >> G_actin(state='i') + Cofilin(state='np'), kfc1)
+
+# YAPTAZ
+# Basal YAPTAZ to YAPTAZp
+Rule('YAPTAZ_to_YAPTAZp_basal', YAPTAZ(state='i') | YAPTAZ(state='p'), knc, kcn)
+# YAPTAZp to YAPTAZ Catalyzed by Factin and MyoA
+Rule('YAPTAZp_to_YAPTAZ',
+     G_actin(state='Factin') + Myo(state='A') + YAPTAZ(state='p') >> G_actin(state='Factin') + Myo(state='A') + YAPTAZ(
+         state='i'), kcy)
+# YAPTAZnuc to YAPTAZ Basal
+Rule('YAPTAZnuc_to_YAPTAZ', YAPTAZ(state='i') | YAPTAZ(state='nuc'), kinb, kout)
+# YAPTAZ to YAPTAZnuc with NPCA opening
+Rule('YAPTAZ_to_YAPTAZnuc', NPC(state='A') + YAPTAZ(state='i') >> NPC(state='A') + YAPTAZ(state='nuc'), kin)
+
+# LaminA
+Expression('Stiffness_LaminA',
+           (p * (obsFactin * 1e6 / (V * Avog_num)) ** 2.6) / (100 + (p * (obsFactin * 1e6 / (V * Avog_num)) ** 2.6)))
+Expression('LaminA_Deactiv', Stiffness_LaminA * kfl)
+Rule('LaminA_to_LaminAp', LaminA(state='i') | LaminA(state='p'), krl, LaminA_Deactiv)
+
+# NPC
+# NPC Closing
+Rule('NPC_close', NPC(state='A') >> NPC(state='i'), kr)
+# NPC Opening
+Rule('NPC_open',
+     NPC(state='i') + LaminA(state='i') + G_actin(state='Factin') + Myo(state='A') >> NPC(state='A') + LaminA(
+         state='i') + G_actin(state='Factin') + Myo(state='A'), kfnpc)
+
+stiffness = 10**np.arange(-3, 8.1, 0.1)
+for E in stiffness:
+    print(E)
+    ksf.value = 0.379 * (E / (E + 3.250))
 
     tspan = np.linspace(0, 100000, 500)
     sim = ScipyOdeSimulator(model, tspan)
     result = sim.run()
 
-    pFAKval = result.observables['obsFAKp'][-1]
-    FAKval = result.observables['obsFAKu'][-1]
-    RhoAGTPval = result.observables['obsRhoAgtp'][-1]
-    MyoAval = result.observables['obsMyoA'][-1]
-    Myoval = result.observables['obsMyoi'][-1]
-    LaminAval = result.observables['obsLaminAi'][-1]
-    LaminApval = result.observables['obsLaminAp'][-1]
-    YAPTAZnucval = result.observables['obsYAPTAZnuc'][-1]
-    YAPTAZcytoval = result.observables['obsYAPTAZp'][-1] + result.observables['obsYAPTAZi'][-1]
+    ss_vals.append(result.observables[-1])
 
-    pFAK.append(pFAKval)
-    FAK.append(FAKval)
-    RhoAGTP.append(RhoAGTPval)
-    MyoA.append(MyoAval)
-    Myo.append(Myoval)
-    LaminA.append(LaminAval)
-    LaminAp.append(LaminApval)
-    YAPTAZnuc.append(YAPTAZnucval)
-    YAPTAZcyto.append(YAPTAZcytoval)
+# Fig 2A
+FAK_tot = [ss_vals[i]['obsFAKp'] + ss_vals[i]['obsFAKu'] for i in range(len(stiffness))]
+pFAK_div_FAKtot = [ss_vals[i]['obsFAKp'] / FAK_tot[i] for i in range(len(stiffness))]
 
-FAK_tot = np.array(pFAK) + np.array(FAK)
-Myo_tot = np.array(MyoA) + np.array(Myo)
-
-pFAK_FAKtot = np.divide(pFAK, FAK_tot)
-MyoA_Myotot = np.divide(MyoA, Myo_tot)
-LaminA_LaminAp = np.divide(LaminA, LaminAp)
-YAPTACnuc_cyto = np.divide(YAPTAZnuc, YAPTAZcyto)
-RhoAGTP_convert = (1e6/(Avog_num*cell_SA))*np.array(RhoAGTP)
-
+plt.figure()
 plt.title('Ratio of pFAK to Total FAK')
-plt.plot(stiffness, pFAK_FAKtot)
-plt.xlabel('log(kPa)')
+plt.plot(stiffness, pFAK_div_FAKtot, 'k-', lw=2)
+plt.xlabel('kPa')
 plt.ylabel('pFAK/Total FAK')
-plt.show()
+plt.xscale('log')
+plt.ylim(0, 1.2)
 
-plt.title('Ratio of MyoA to Total Myo')
-plt.plot(stiffness, MyoA_Myotot)
-plt.xlabel('log(kPa)')
-plt.ylabel('MyoA/Total Myo')
-plt.show()
+# Fig 2B
+RhoAGTP_convert = [(1e6/(Avog_num*cell_SA))*ss_vals[i]['obsRhoAgtp'] for i in range(len(stiffness))]
 
-plt.title('Ratio of Nuclear YAPTAZ to Cytosolic YAPTAZ')
-plt.plot(stiffness, YAPTACnuc_cyto)
-plt.xlabel('log(kPa)')
-plt.ylabel('YAPTAZ N/C')
-plt.show()
-
+plt.figure()
 plt.title('RhoA GTP')
-plt.plot(stiffness, LaminA_LaminAp)
-plt.xlabel('log(kPa)')
+plt.plot(stiffness, RhoAGTP_convert, 'k-', lw=2)
+plt.xlabel('kPa')
 plt.ylabel('RhoAGTP (umol/um^2)')
-plt.show()
+plt.xscale('log')
+plt.xlim(xmin=1)
+# plt.ylim(7e-16, 12e-16)
 
+# Fig 2C
+Myo_tot = [ss_vals[i]['obsMyoA'] + ss_vals[i]['obsMyoi'] for i in range(len(stiffness))]
+MyoA_div_Myotot = [ss_vals[i]['obsMyoA'] / Myo_tot[i] for i in range(len(stiffness))]
+
+plt.figure()
+plt.title('Ratio of MyoA to Total Myo')
+plt.plot(stiffness, MyoA_div_Myotot, 'k-', lw=2)
+plt.xlabel('kPa')
+plt.ylabel('MyoA/Total Myo')
+plt.xscale('log')
+plt.xlim(xmin=1)
+plt.ylim(0.5, 1.2)
+
+# Fig 2D
+LaminA_div_LaminAp = [ss_vals[i]['obsLaminAi'] / ss_vals[i]['obsLaminAp'] for i in range(len(stiffness))]
+
+plt.figure()
 plt.title('Ratio of LaminA to LaminAp')
-plt.plot(stiffness, LaminA_LaminAp)
-plt.xlabel('log(kPa)')
+plt.plot(stiffness, LaminA_div_LaminAp, 'k-', lw=2)
+plt.xlabel('kPa')
 plt.ylabel('LaminA/LaminAp')
-plt.show()
+plt.xlim(0,50)
+plt.ylim(0,8)
 
+# Fig 2E
+YAPTAZnuc_div_cyto = [ss_vals[i]['obsYAPTAZnuc'] / (ss_vals[i]['obsYAPTAZi'] + ss_vals[i]['obsYAPTAZp'])
+                      for i in range(len(stiffness))]
+
+plt.figure()
+plt.title('Ratio of Nuclear YAPTAZ to Cytosolic YAPTAZ')
+plt.plot(stiffness, YAPTAZnuc_div_cyto, 'k-', lw=2)
+plt.xlabel('kPa')
+plt.ylabel('YAPTAZ N/C')
+plt.xscale('log')
+plt.ylim(0.5,4.5)
+
+plt.show()
 # plt.title('FAK and FAKp')
 # plt.plot(tspan, result.observables['obsFAKu'], tspan, result.observables['obsFAKp'])
 # plt.legend(['FAK', 'FAKp'])
