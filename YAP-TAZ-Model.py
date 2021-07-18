@@ -44,7 +44,8 @@ Monomer('NPC', ['state'], {'state': ['A', 'i']})
     #V is in Liters and we Choose what E is
 V = 2300e-15 # Cytoplasm
 V_2 = 550e-15 # Nucleus
-Avog_num = 6.022e23
+V_tot = V + V_2
+Avog_num = 6.022e23 # #/mol
 # Units are in um^2
 cell_SA = 1260 # Plasma Membrane
 cell_SA_2 = 390 # Nuclear Membrane
@@ -57,6 +58,7 @@ ss_vals = []
 Parameter('kf', 0.015)
 Parameter('kdf', 0.035)
 Parameter('ksf')
+
 # RhoA Reaction
 
 # Original Units: (1/s)
@@ -146,8 +148,8 @@ Parameter('knc', 0.14)
 Parameter('kcn', 0.56)
 # Used for 1st order reactions (although these are kinda weird)
 # Original Units: #/(s*uM*um^2)
-Parameter('kinb', 1 * 1e6 * cell_SA / (Avog_num * V))  # <---- Derived using some calculations
-Parameter('kout', 1 * 1e6 * cell_SA / (Avog_num * V))
+Parameter('kinb', 1 * 1e6 * cell_SA_2 / (Avog_num * V))  # <---- Derived using some calculations
+Parameter('kout', 1 * 1e6 * cell_SA_2 / (Avog_num * V_2))
 # Used for 3rd order reactions
 # Original Units 1/((uM*)2)*s)
 Parameter('kcy', 7.6e-4 * 1e12 / ((V * Avog_num) ** 2))
@@ -171,7 +173,7 @@ Parameter('p', 9e-6)
 Parameter('kr', 8.7)
 # Used for a 4th order reaction
 # Original Units: um^2/(#*uM^2*s)
-Parameter('kfnpc', 2.8e-7 * 1e12 / (cell_SA * (V * Avog_num) ** 2))
+Parameter('kfnpc', 2.8e-7 * 1e12 / (cell_SA_2 * (V * Avog_num) ** 2))
 
 # In[4]:
 
@@ -367,7 +369,7 @@ plt.plot(stiffness, pFAK_div_FAKtot, 'k-', lw=2)
 plt.xlabel('kPa')
 plt.ylabel('pFAK/Total FAK')
 plt.xscale('log')
-plt.ylim(0, 1.2)
+# plt.ylim(0, 1.2)
 
 # Fig 2B
 RhoAGTP_convert = [(1e6/(Avog_num*cell_SA))*ss_vals[i]['obsRhoAgtp'] for i in range(len(stiffness))]
@@ -379,7 +381,7 @@ plt.xlabel('kPa')
 plt.ylabel('RhoAGTP (umol/um^2)')
 plt.xscale('log')
 plt.xlim(xmin=1)
-# plt.ylim(7e-16, 12e-16)
+plt.ylim(7e-16, 12e-16)
 
 # Fig 2C
 Myo_tot = [ss_vals[i]['obsMyoA'] + ss_vals[i]['obsMyoi'] for i in range(len(stiffness))]
@@ -406,12 +408,12 @@ plt.xlim(0,50)
 plt.ylim(0,8)
 
 # Fig 2E
-YAPTAZnuc_div_cyto = [ss_vals[i]['obsYAPTAZnuc'] / (ss_vals[i]['obsYAPTAZi'] + ss_vals[i]['obsYAPTAZp'])
-                      for i in range(len(stiffness))]
+YAPTAZnuc_div_cyto = np.array([ss_vals[i]['obsYAPTAZnuc'] / (ss_vals[i]['obsYAPTAZi'] + ss_vals[i]['obsYAPTAZp'])
+                      for i in range(len(stiffness))])
 
 plt.figure()
 plt.title('Ratio of Nuclear YAPTAZ to Cytosolic YAPTAZ')
-plt.plot(stiffness, YAPTAZnuc_div_cyto, 'k-', lw=2)
+plt.plot(stiffness, YAPTAZnuc_div_cyto*(V/V_2), 'k-', lw=2)
 plt.xlabel('kPa')
 plt.ylabel('YAPTAZ N/C')
 plt.xscale('log')
